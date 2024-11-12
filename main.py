@@ -1,3 +1,5 @@
+import random as r
+
 class Phenotype:
     def __init__(self, trait: str, symbol: chr, descriptors: list): 
         self.trait: str = trait
@@ -31,17 +33,23 @@ class Genome:
     def display(self):
         for genotype in self._genotypes:
             genotype.display()
-        print("".join(genotype.display())) 
+
+    def normaliseID(self, geneticID: str):
+        if geneticID == "01":
+            return "10"
+        return geneticID
 
     # NEEDS UPDATING, DONT USE
     def crossover(self, parent):
-        offspring_attributes = {}
-        for attribute in parent._attributes:
-            # Averaging the traits of both parents
-            value1 = self._attributes[attribute]
-            value2 = parent._attributes[attribute]
-            offspring_attributes[attribute] = (value1 + value2) / 2
-        return Genome(offspring_attributes)
+        child = []
+        for element in range(len(self._genotypes)):
+            geneticOptions = []
+            for allele1 in self._genotypes[element].geneticID:
+                for allele2 in parent._genotypes[element].geneticID:
+                    geneticOptions.append(normaliseID(allele1 + allele2))
+            child.append(r.choice(geneticOptions))
+        return Genome([speed.createGenotype(child[0]), metabolism.createGenotype(child[1])])
+
 
 # Define Phenotypes used in simulation
 speed = Phenotype("Speed", "s", ["Slow", "Fast"])
